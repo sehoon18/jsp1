@@ -1,5 +1,4 @@
 <%@page import="java.sql.ResultSet"%>
-<%@page import="com.mysql.cj.protocol.Resultset"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
@@ -9,11 +8,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>jsp4/info.jsp</title>
+<title>Insert title here</title>
 </head>
 <body>
 <%
-String id = (String)session.getAttribute("id");
+String sid = (String)session.getAttribute("id");
 
 Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -24,19 +23,23 @@ Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
 
 String sql = "select * from members where id = ?";
 PreparedStatement pstmt = con.prepareStatement(sql);
-pstmt.setString(1,id);
+pstmt.setString(1, sid);
 
 ResultSet rs = pstmt.executeQuery();
 
-while (rs.next()){
-	out.println("id :" + rs.getString("id") + "<br>");
-	out.println("pass : " + rs.getString("pass") + "<br>");
-	out.println("이름 : " + rs.getString("name") + "<br>");
-	out.println("가입날짜 : " + rs.getTimestamp("date") + "<br>");
+if (rs.next()){
+	%>
+	<form action="updatePro.jsp" method="post">
+	아이디 : <input type="text" name="id" value="<%=rs.getString("id") %>" readonly><br>
+	비밀번호 : <input type="password" name="pass"><br>
+	이름 : <input type="text" name="name" value="<%=rs.getString("name") %>"><br>
+	<input type="submit" value="수정하기">
+	<input type="button" value="취소" onclick="history.back();">
+	</form>
+	<%
+	
 }
 %>
-<a href="update.jsp"><button>회원정보변경</button></a>
-<a href="delete.jsp"><button>회원정보삭제</button></a>
-<input type="button" value="뒤로가기" onclick="history.back();">
+
 </body>
 </html>

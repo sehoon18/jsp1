@@ -10,9 +10,10 @@
 <h2>로그인</h2>
 <form action="loginPro.jsp" method="post">
 아이디	: <input type="text" name="id">
-비밀번호	: <input type="password" name="pass">
+비밀번호	: <input type="password" name="pass"><br>
 <input type="submit" value="로그인">
 </form>
+<a href="insert.jsp"><button>회원가입</button></a>
 
 
 </body>

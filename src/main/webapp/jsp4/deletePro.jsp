@@ -1,7 +1,7 @@
 <%@page import="java.sql.ResultSet"%>
-<%@page import="com.mysql.cj.protocol.Resultset"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.DriverManager"%>
+<%@page import="com.mysql.cj.jdbc.Driver"%>
 <%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -9,11 +9,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>jsp4/info.jsp</title>
+<title>Insert title here</title>
 </head>
 <body>
 <%
-String id = (String)session.getAttribute("id");
+String id = request.getParameter("id");
+String pass = request.getParameter("pass");
 
 Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -22,21 +23,25 @@ String dbUser = "root";
 String dbPass = "1234";
 Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
 
-String sql = "select * from members where id = ?";
+String sql = "Select * from members where id = ? and pass = ?";
 PreparedStatement pstmt = con.prepareStatement(sql);
-pstmt.setString(1,id);
+pstmt.setString(1, id);
+pstmt.setString(2, pass);
 
 ResultSet rs = pstmt.executeQuery();
 
-while (rs.next()){
-	out.println("id :" + rs.getString("id") + "<br>");
-	out.println("pass : " + rs.getString("pass") + "<br>");
-	out.println("이름 : " + rs.getString("name") + "<br>");
-	out.println("가입날짜 : " + rs.getTimestamp("date") + "<br>");
+if(rs.next()){
+	String sql2 = "delete from members where id = ?";
+	PreparedStatement pstmt2 = con.prepareStatement(sql2);
+	pstmt2.setString(1, id);
+	
+	pstmt2.executeUpdate();
+	out.println("삭제완료");
+	%><a href="login.jsp"><button>메인으로</button></a><%
+} else {
+	out.println("아이디/비밀번호 틀림");
 }
+
 %>
-<a href="update.jsp"><button>회원정보변경</button></a>
-<a href="delete.jsp"><button>회원정보삭제</button></a>
-<input type="button" value="뒤로가기" onclick="history.back();">
 </body>
 </html>
