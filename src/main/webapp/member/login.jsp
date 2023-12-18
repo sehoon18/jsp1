@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>jsp4/login.jsp</title>
+<title>member/login.jsp</title>
 </head>
 <body>
 <h2>로그인</h2>

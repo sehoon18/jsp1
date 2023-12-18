@@ -1,3 +1,4 @@
+package member;
 import java.sql.Timestamp;
 
 public class MemberDTO {
@@ -16,21 +17,21 @@ public class MemberDTO {
 	public String getPass() {
 		return pass;
 	}
-	public void setPass(String id) {
-		this.id = id;
+	public void setPass(String pass) {
+		this.pass = pass;
 	}
 	
-	public String setName() {
+	public String getName() {
 		return name;
 	}
-	public void getName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 	
-	public Timestamp setDate() {
+	public Timestamp getDate() {
 		return date;
 	}
-	public void getDate(Timestamp date) {
+	public void setDate(Timestamp date) {
 		this.date = date;
 	}
 }
