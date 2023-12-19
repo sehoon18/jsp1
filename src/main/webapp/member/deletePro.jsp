@@ -1,8 +1,9 @@
 <%@page import="member.MemberDTO"%>
 <%@page import="member.MemberDAO"%>
-<%@page import="java.sql.Timestamp"%>
+<%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.DriverManager"%>
+<%@page import="com.mysql.cj.jdbc.Driver"%>
 <%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -10,28 +11,26 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>member/insertPro.jsp</title>
+<title>Insert title here</title>
 </head>
 <body>
 <%
-request.setCharacterEncoding("utf-8");
 String id = request.getParameter("id");
 String pass = request.getParameter("pass");
-String name = request.getParameter("name");
-
-Timestamp date = new Timestamp(System.currentTimeMillis());
 
 MemberDAO mDAO = new MemberDAO();
-MemberDTO mDTO = mDAO.getInfo(id);
+boolean result = mDAO.userCheck(id, pass);
 
-if (mDTO.getId() == null){
-	mDAO.insertMember(id, pass, name, date);
-	response.sendRedirect("login.jsp");
-} else{
-	%>아이디 중복<br>
-	<a href="insert.jsp"><button>뒤로가기</button></a><%
+if(result == true){
+	MemberDTO mDTO = new MemberDTO();
+	mDTO.setId(id);
+	mDAO.deleteMember(mDTO);
+	out.println("삭제완료");
+	%><a href="login.jsp"><button>메인으로</button></a><%
+} else {
+	out.println("아이디/비밀번호 틀림");
+	%><a href="login.jsp"><button>메인으로</button></a><%
 }
-
 
 %>
 </body>

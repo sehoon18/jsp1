@@ -1,7 +1,6 @@
-<%@page import="member.MemberDTO"%>
 <%@page import="member.MemberDAO"%>
+<%@page import="member.MemberDTO"%>
 <%@page import="java.sql.ResultSet"%>
-<%@page import="com.mysql.cj.protocol.Resultset"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
@@ -11,7 +10,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>member/info.jsp</title>
+<title>member/upadte.jsp</title>
 </head>
 <body>
 <%
@@ -20,20 +19,19 @@ String id = (String)session.getAttribute("id");
 MemberDAO mDAO = new MemberDAO();
 MemberDTO mDTO = mDAO.getInfo(id);
 
-if (id != null){%>
-아이디 : <%=mDTO.getId() %><br>
-비밀번호 : <%=mDTO.getPass() %><br>
-이름 : <%=mDTO.getName() %><br>
-가입날짜 : <%=mDTO.getDate() %><br>
-	
-<%
-} else{
+if (mDTO != null){
+	%>
+	<form action="updatePro.jsp" method="post">
+	아이디 : <input type="text" name="id" value="<%=mDTO.getId() %>" readonly><br>
+	비밀번호 : <input type="password" name="pass"><br>
+	이름 : <input type="text" name="name" value="<%=mDTO.getName() %>"><br>
+	<input type="submit" value="수정하기">
+	<input type="button" value="취소" onclick="history.back();">
+	</form>
+	<%
 	
 }
-
 %>
-<a href="update.jsp"><button>회원정보변경</button></a>
-<a href="delete.jsp"><button>회원정보삭제</button></a>
-<a href="main.jsp"><button>뒤로가기</button></a>
+
 </body>
 </html>

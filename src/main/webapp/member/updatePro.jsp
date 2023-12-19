@@ -1,6 +1,6 @@
 <%@page import="member.MemberDTO"%>
 <%@page import="member.MemberDAO"%>
-<%@page import="java.sql.Timestamp"%>
+<%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>member/insertPro.jsp</title>
+<title>Insert title here</title>
 </head>
 <body>
 <%
@@ -19,19 +19,20 @@ String id = request.getParameter("id");
 String pass = request.getParameter("pass");
 String name = request.getParameter("name");
 
-Timestamp date = new Timestamp(System.currentTimeMillis());
-
 MemberDAO mDAO = new MemberDAO();
-MemberDTO mDTO = mDAO.getInfo(id);
+boolean result = mDAO.userCheck(id, pass);
 
-if (mDTO.getId() == null){
-	mDAO.insertMember(id, pass, name, date);
-	response.sendRedirect("login.jsp");
-} else{
-	%>아이디 중복<br>
-	<a href="insert.jsp"><button>뒤로가기</button></a><%
+if (result == true){
+	MemberDTO mDTO = new MemberDTO();
+	mDTO.setName(name);
+	mDTO.setId(id);
+	mDAO.updateMember(mDTO);
+	out.println("이름 변경 완료");
+	response.sendRedirect("info.jsp");
+} else {
+	out.println("아이디/비밀번호 틀림");
+	%><input type="button" value="뒤로가기" onclick="history.back();"><%
 }
-
 
 %>
 </body>

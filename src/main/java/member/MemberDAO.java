@@ -10,15 +10,26 @@ public class MemberDAO {
 	// 생성자 => 생략시 기본생성자 만듬
 	// 멤버 함수(메서드) method
 	
-	// insertMember() 메서드 정의
-	public void insertMember(String id, String pass, String name, Timestamp date) {
+	public Connection getConnection() {
+		Connection con = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			String dbUrl = "jdbc:mysql://localhost:3306/jspdb?serverTimezone=Asia/Seoul";
 			String dbUser = "root";
 			String dbPass = "1234";
-			Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+			con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}return con;
+	}
+	
+	// insertMember() 메서드 정의
+	public void insertMember(String id, String pass, String name, Timestamp date) {
+		try {
+			Connection con = getConnection();
 
 			String sql = "insert into members(id, pass, name, date) values(?, ?, ?, ?)";
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -30,20 +41,16 @@ public class MemberDAO {
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("아이디 중복");
 		}finally {
 			
 		}
 		
 	}
 	public boolean userCheck(String id, String pass) {
-		boolean uc = false;
+		boolean result = false;
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-
-			String dbUrl = "jdbc:mysql://localhost:3306/jspdb?serverTimezone=Asia/Seoul";
-			String dbUser = "root";
-			String dbPass = "1234";
-			Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+			Connection con = getConnection();
 
 			String sql = "select * from members where id = ? and pass = ?";
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -53,28 +60,23 @@ public class MemberDAO {
 			ResultSet rs = pstmt.executeQuery();
 			
 			if (rs.next()) {
-				uc = true;
+				result = true;
 				System.out.println("로그인 성공");
 			} else {
-				uc = false;
+				result = false;
 				System.out.println("로그인 실패");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			
-		} return uc;
+		} return result;
 	}
 	
 	public MemberDTO getInfo(String id) {
 		MemberDTO mdto = new MemberDTO();
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-
-			String dbUrl = "jdbc:mysql://localhost:3306/jspdb?serverTimezone=Asia/Seoul";
-			String dbUser = "root";
-			String dbPass = "1234";
-			Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+			Connection con = getConnection();
 
 			String sql = "select * from members where id = ?";
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -97,5 +99,36 @@ public class MemberDAO {
 		} return mdto;
 		
 	}
+	
+	public void updateMember(MemberDTO mdto) {
+		try {
+			Connection con = getConnection();
+			String sql = "update members set name = ? where id = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, mdto.getName());
+			pstmt.setString(2, mdto.getId());
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+	}
+	public void deleteMember(MemberDTO mdto) {
+		try {
+			Connection con = getConnection();
+			String sql = "delete from members where id = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, mdto.getId());
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+	}
+	
 
 }
