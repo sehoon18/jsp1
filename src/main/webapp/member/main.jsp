@@ -22,6 +22,8 @@ if(id != null){
 		%><a href="list.jsp"><button>회원목록</button></a> <%
 	}
 }
+
 %>
+<a href="../board/write.jsp"><button>글쓰기</button></a>
 </body>
 </html>

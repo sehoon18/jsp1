@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class MemberDAO {
 	// 멤버 변수
@@ -128,6 +129,34 @@ public class MemberDAO {
 		} finally {
 			
 		}
+	}
+	
+	public ArrayList<MemberDTO> getMemberList() {
+		ArrayList<MemberDTO> mlist = new ArrayList<MemberDTO>();
+		try {
+			Connection con = getConnection();
+			
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			String sql = "select * from members";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				MemberDTO mdto = new MemberDTO();
+				mdto.setId(rs.getString("id"));
+				mdto.setPass(rs.getString("pass"));
+				mdto.setName(rs.getString("name"));
+				mdto.setDate(rs.getTimestamp("date"));
+				mlist.add(mdto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}return mlist;
 	}
 	
 
