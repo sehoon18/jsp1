@@ -3,6 +3,8 @@ package board;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class BoardDAO {
 	
@@ -40,4 +42,83 @@ public class BoardDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public int getBoardNum() {
+		int num = 0;
+		try {
+			Connection con = getConnection();
+			
+			String sql = "select max(num) from board";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				num = rs.getInt("max(num)");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}return num;
+	}
+	
+	public ArrayList<BoardDTO> getBoardList() {
+		ArrayList<BoardDTO> blist = new ArrayList<BoardDTO>();
+		try {
+			Connection con = getConnection();
+			
+			String sql = "select* from board";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BoardDTO bdto = new BoardDTO();
+				bdto.setNum(rs.getInt("num"));
+				bdto.setName(rs.getString("name"));
+				bdto.setSubject(rs.getString("subject"));
+				bdto.setContent(rs.getString("content"));
+				bdto.setReadCount(rs.getInt("readcount"));
+				bdto.setDate(rs.getTimestamp("date"));
+				blist.add(bdto);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}return blist;
+		
+	} 
+	
+	public BoardDTO getBoardContent(int num) {
+		BoardDTO bdto = new BoardDTO();
+		try {
+			Connection con = getConnection();
+			
+			String sql = "select * from board where num = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				bdto.setNum(rs.getInt("num"));
+				bdto.setName(rs.getString("name"));
+				bdto.setSubject(rs.getString("subject"));
+				bdto.setContent(rs.getString("content"));
+				bdto.setReadCount(rs.getInt("readcount"));
+				bdto.setDate(rs.getTimestamp("date"));
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		} return bdto;
+	}
+	
 }

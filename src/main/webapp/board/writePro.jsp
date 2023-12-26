@@ -18,7 +18,8 @@ String name = request.getParameter("name");
 String subject = request.getParameter("subject");
 String content = request.getParameter("content");
 
-int num = 1;
+BoardDAO bDAO = new BoardDAO();
+int num = bDAO.getBoardNum() + 1;
 int readcount = 0;
 Timestamp date = new Timestamp(System.currentTimeMillis());
 
@@ -31,9 +32,8 @@ bDTO.setContent(content);
 bDTO.setReadCount(readcount);
 bDTO.setDate(date);
 
-BoardDAO bDAO = new BoardDAO();
 bDAO.insertBoard(bDTO);
-num++;
+response.sendRedirect("../member/main.jsp");
 %>
 </body>
 </html>

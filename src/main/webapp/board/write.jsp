@@ -26,7 +26,7 @@
 				<td><textarea name="content" rows="10" cols="20"></textarea></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit" value="글쓰기"></td>
+				<td colspan="2"><input type="submit" value="글쓰기"><a href="../member/main.jsp"><button>돌아가기</button></a></td>
 			</tr>
 
 		</table>
