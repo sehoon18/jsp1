@@ -11,9 +11,11 @@
 <body>
 <h1>board/content.jsp</h1>
 <%
+String id = (String)session.getAttribute("id");
 int num = Integer.parseInt(request.getParameter("num"));
 BoardDAO bDAO = new BoardDAO();
 BoardDTO bDTO = bDAO.getBoardContent(num);
+bDAO.updateReadcount(num);
 %>
 <table border="1">
 <tr><td>글번호</td><td><%=bDTO.getNum() %></td></tr>
@@ -25,7 +27,16 @@ BoardDTO bDTO = bDAO.getBoardContent(num);
 
 </table>
 <a href="list.jsp"><button>뒤로가기</button></a>
-
+<%
+if (id != null){
+	if(id.equals(bDTO.getName())){
+		%>
+		<a href="update.jsp?num=<%=bDTO.getNum() %>"><button>글수정</button></a>
+		<a href="delete.jsp?num=<%=bDTO.getNum() %>"><button>글삭제</button></a>
+		<%
+	}
+}
+%>
 
 
 </body>

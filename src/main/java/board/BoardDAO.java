@@ -28,14 +28,13 @@ public class BoardDAO {
 		try {
 			Connection con = getConnection();
 
-			String sql = "insert into board(num, name, subject, content, readcount, date) values(?, ?, ?, ?, ?, ?)";
+			String sql = "insert into board(num, name, subject, content, date) values(?, ?, ?, ?, ?)";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, bdto.getNum());
 			pstmt.setString(2, bdto.getName());
 			pstmt.setString(3, bdto.getSubject());
 			pstmt.setString(4, bdto.getContent());
-			pstmt.setInt(5, bdto.getReadCount());
-			pstmt.setTimestamp(6, bdto.getDate());
+			pstmt.setTimestamp(5, bdto.getDate());
 
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -120,5 +119,56 @@ public class BoardDAO {
 			
 		} return bdto;
 	}
+	
+	public void updateReadcount(int num) {
+		try {
+			Connection con = getConnection();
+			
+			String sql = "update board set readcount = readcount + 1 where num = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+	}
+	
+	public void updateBoard(BoardDTO bDTO) {
+		try {
+			Connection con = getConnection();
+			
+			String sql = "update board set subject = ?, content = ? where num = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, bDTO.getSubject());
+			pstmt.setString(2, bDTO.getContent());
+			pstmt.setInt(3, bDTO.getNum());
+			
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+	}
+	public void deleteBoard(int num) {
+		try {
+			Connection con = getConnection();
+			
+			String sql = "delete from board where num = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+	}
+	
 	
 }
