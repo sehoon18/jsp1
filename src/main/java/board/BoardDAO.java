@@ -6,17 +6,28 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 public class BoardDAO {
+	Connection con = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
 	
 	public Connection getConnection() {
-		Connection con = null;
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-
-			String dbUrl = "jdbc:mysql://localhost:3306/jspdb?serverTimezone=Asia/Seoul";
-			String dbUser = "root";
-			String dbPass = "1234";
-			con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+//			Class.forName("com.mysql.cj.jdbc.Driver");
+//
+//			String dbUrl = "jdbc:mysql://localhost:3306/jspdb?serverTimezone=Asia/Seoul";
+//			String dbUser = "root";
+//			String dbPass = "1234";
+//			con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+			
+			Context init = new InitialContext();
+			DataSource ds = (DataSource)init.lookup("java:comp/env/jdbc/MysqlDB");
+			con = ds.getConnection();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -24,12 +35,38 @@ public class BoardDAO {
 		}return con;
 	}
 	
+	public void dbClose() {
+		if(con != null) {
+			
+		try {
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+		if(pstmt != null) {
+			
+		try {
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+		if(rs != null) {
+			
+		try {
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	}
+	
 	public void insertBoard(BoardDTO bdto) {
 		try {
-			Connection con = getConnection();
 
 			String sql = "insert into board(num, name, subject, content, date) values(?, ?, ?, ?, ?)";
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, bdto.getNum());
 			pstmt.setString(2, bdto.getName());
 			pstmt.setString(3, bdto.getSubject());
@@ -39,18 +76,19 @@ public class BoardDAO {
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			dbClose();
 		}
 	}
 	
 	public int getBoardNum() {
 		int num = 0;
 		try {
-			Connection con = getConnection();
 			
 			String sql = "select max(num) from board";
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				num = rs.getInt("max(num)");
@@ -59,19 +97,18 @@ public class BoardDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+			dbClose();
 		}return num;
 	}
 	
 	public ArrayList<BoardDTO> getBoardList() {
 		ArrayList<BoardDTO> blist = new ArrayList<BoardDTO>();
 		try {
-			Connection con = getConnection();
-			
+			con = getConnection();
 			String sql = "select* from board";
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				BoardDTO bdto = new BoardDTO();
@@ -88,21 +125,19 @@ public class BoardDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+			dbClose();
 		}return blist;
 		
 	} 
 	
 	public BoardDTO getBoardContent(int num) {
 		BoardDTO bdto = new BoardDTO();
-		try {
-			Connection con = getConnection();
-			
+		try {	
 			String sql = "select * from board where num = ?";
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				bdto.setNum(rs.getInt("num"));
 				bdto.setName(rs.getString("name"));
@@ -116,32 +151,30 @@ public class BoardDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+			dbClose();
 		} return bdto;
 	}
 	
 	public void updateReadcount(int num) {
 		try {
-			Connection con = getConnection();
-			
+		
 			String sql = "update board set readcount = readcount + 1 where num = ?";
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+			dbClose();
 		}
 	}
 	
 	public void updateBoard(BoardDTO bDTO) {
 		try {
-			Connection con = getConnection();
-			
+		
 			String sql = "update board set subject = ?, content = ? where num = ?";
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bDTO.getSubject());
 			pstmt.setString(2, bDTO.getContent());
 			pstmt.setInt(3, bDTO.getNum());
@@ -151,22 +184,21 @@ public class BoardDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+			dbClose();
 		}
 	}
 	public void deleteBoard(int num) {
 		try {
-			Connection con = getConnection();
-			
+		
 			String sql = "delete from board where num = ?";
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+			dbClose();
 		}
 	}
 	
