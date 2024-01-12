@@ -1,4 +1,4 @@
-package member;
+package com.itwillbs.domain;
 import java.sql.Timestamp;
 
 public class MemberDTO {

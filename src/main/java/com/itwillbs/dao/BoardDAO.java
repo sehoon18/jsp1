@@ -1,4 +1,4 @@
-package board;
+package com.itwillbs.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+
+import com.itwillbs.domain.BoardDTO;
 
 public class BoardDAO {
 	Connection con = null;

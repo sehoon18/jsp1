@@ -1,11 +1,5 @@
+<%@page import="com.itwillbs.domain.MemberDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="member.MemberDAO"%>
-<%@page import="member.MemberDTO"%>
-<%@page import="java.sql.Timestamp"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="java.sql.PreparedStatement"%>
-<%@page import="java.sql.DriverManager"%>
-<%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -27,9 +21,8 @@ if (id != null){
 	response.sendRedirect("login.jsp");
 }
 
-MemberDAO mDAO = new MemberDAO();
 
-ArrayList<MemberDTO> mList = mDAO.getMemberList();
+ArrayList<MemberDTO> mList = (ArrayList)request.getAttribute("memberList");
 
 
 %>
@@ -45,7 +38,7 @@ for (int i = 0; i < mList.size(); i++){
 }
 %>
 </table>
-<a href="main.jsp"><button>뒤로가기</button></a>
+<a href="main.me"><button>뒤로가기</button></a>
 
 </body>
 </html>
