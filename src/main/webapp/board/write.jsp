@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,14 +9,11 @@
 </head>
 <body>
 	<h1>board/write.jsp</h1>
-	<%
-	String id = (String) session.getAttribute("id");
-	%>
-	<form action="writePro.jsp" method="post">
+	<form action="writePro.bo" method="post">
 		<table border="1">
 			<tr>
 				<td>글쓴이</td>
-				<td><input type="text" name="name" value="<%=id%>" readonly></td>
+				<td><input type="text" name="name" value="${sessionScope.id }" readonly></td>
 			</tr>
 			<tr>
 				<td>글제목</td>
@@ -26,13 +24,13 @@
 				<td><textarea name="content" rows="10" cols="20"></textarea></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit" value="글쓰기"><a href="../member/main.jsp"><button>돌아가기</button></a></td>
+				<td colspan="2"><input type="submit" value="글쓰기"></td>
 			</tr>
 
 		</table>
 
 	</form>
-
+<a href="main.me"><button>돌아가기</button></a>
 
 </body>
 </html>

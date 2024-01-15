@@ -42,11 +42,11 @@ public class BoardDTO {
 		this.content = content;
 	}
 
-	public int getReadCount() {
+	public int getReadcount() {
 		return readcount;
 	}
 
-	public void setReadCount(int readcount) {
+	public void setReadcount(int readcount) {
 		this.readcount = readcount;
 	}
 

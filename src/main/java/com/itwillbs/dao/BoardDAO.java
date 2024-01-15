@@ -66,14 +66,16 @@ public class BoardDAO {
 	
 	public void insertBoard(BoardDTO bdto) {
 		try {
-
-			String sql = "insert into board(num, name, subject, content, date) values(?, ?, ?, ?, ?)";
+			
+			con = getConnection();
+			String sql = "insert into board(num, name, subject, content, readcount, date) values(?, ?, ?, ?, ?, ?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, bdto.getNum());
 			pstmt.setString(2, bdto.getName());
 			pstmt.setString(3, bdto.getSubject());
 			pstmt.setString(4, bdto.getContent());
-			pstmt.setTimestamp(5, bdto.getDate());
+			pstmt.setInt(5, bdto.getReadcount());
+			pstmt.setTimestamp(6, bdto.getDate());
 
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -86,13 +88,14 @@ public class BoardDAO {
 	public int getBoardNum() {
 		int num = 0;
 		try {
-			
+			con = getConnection();	
+
 			String sql = "select max(num) from board";
 			pstmt = con.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
 			
-			while(rs.next()) {
+			if(rs.next()) {
 				num = rs.getInt("max(num)");
 			}
 			
@@ -104,6 +107,8 @@ public class BoardDAO {
 	}
 	
 	public ArrayList<BoardDTO> getBoardList() {
+		System.out.println("BoardDAO getBoardList()");
+
 		ArrayList<BoardDTO> blist = new ArrayList<BoardDTO>();
 		try {
 			con = getConnection();
@@ -118,7 +123,7 @@ public class BoardDAO {
 				bdto.setName(rs.getString("name"));
 				bdto.setSubject(rs.getString("subject"));
 				bdto.setContent(rs.getString("content"));
-				bdto.setReadCount(rs.getInt("readcount"));
+				bdto.setReadcount(rs.getInt("readcount"));
 				bdto.setDate(rs.getTimestamp("date"));
 				blist.add(bdto);
 			}
@@ -128,24 +133,28 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			dbClose();
-		}return blist;
+		} return blist;
 		
 	} 
 	
 	public BoardDTO getBoardContent(int num) {
+		System.out.println("BoardDAO getBoardContent()");
+
 		BoardDTO bdto = new BoardDTO();
-		try {	
+		try {
+			con = getConnection();
 			String sql = "select * from board where num = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			
 			rs = pstmt.executeQuery();
+			
 			if(rs.next()) {
 				bdto.setNum(rs.getInt("num"));
 				bdto.setName(rs.getString("name"));
 				bdto.setSubject(rs.getString("subject"));
 				bdto.setContent(rs.getString("content"));
-				bdto.setReadCount(rs.getInt("readcount"));
+				bdto.setReadcount(rs.getInt("readcount"));
 				bdto.setDate(rs.getTimestamp("date"));
 			}
 			
@@ -158,8 +167,10 @@ public class BoardDAO {
 	}
 	
 	public void updateReadcount(int num) {
+		System.out.println("BoardDAO updateReadcount()");
+
 		try {
-		
+			con = getConnection();	
 			String sql = "update board set readcount = readcount + 1 where num = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -174,7 +185,8 @@ public class BoardDAO {
 	
 	public void updateBoard(BoardDTO bDTO) {
 		try {
-		
+			con = getConnection();	
+
 			String sql = "update board set subject = ?, content = ? where num = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bDTO.getSubject());
@@ -191,7 +203,8 @@ public class BoardDAO {
 	}
 	public void deleteBoard(int num) {
 		try {
-		
+			con = getConnection();	
+
 			String sql = "delete from board where num = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
