@@ -25,8 +25,8 @@
 <tr><td>제목</td><td>${bDTO.subject }</td></tr>
 <tr><td>내용</td><td width="200" height="300">${bDTO.content }</td></tr>
 <tr><td>조회수</td><td>${bDTO.readcount }</td></tr>
-
 </table>
+
 <a href="list.bo"><button>뒤로가기</button></a>
 <c:if test="${not empty sessionScope.id }">
 	<c:if test="${sessionScope.id eq bDTO.name }">
@@ -34,18 +34,6 @@
 		<a href="delete.bo?num=${bDTO.num }"><button>글삭제</button></a>
 	</c:if>
 </c:if>
-
-<%
-// if (id != null){
-// 	if(id.equals(bDTO.getName())){
-		%>
-<%-- 		<a href="update.jsp?num=<%=bDTO.getNum() %>"><button>글수정</button></a> --%>
-<%-- 		<a href="delete.jsp?num=<%=bDTO.getNum() %>"><button>글삭제</button></a> --%>
-		<%
-// 	}
-// }
-%>
-
 
 </body>
 </html>

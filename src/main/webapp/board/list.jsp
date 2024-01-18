@@ -9,7 +9,8 @@
 <title>board/list.jsp</title>
 </head>
 <body>
-<h1>글목록</h1>
+<c:set var="pageDTO" value="${requestScope.pageDTO }"/>
+<h1>글목록 [전체 글 개수 : ${pageDTO.count }]</h1>
 <c:set var="boardList" value="${requestScope.boardList }"/>
 
 <table border="1">
@@ -26,6 +27,18 @@
 </table>
 
 <a href="main.me"><button>메인으로</button></a>
+
+<c:if test="${pageDTO.startPage > pageDTO.pageBlock }">
+	<a href="list.bo?pageNum=${pageDTO.startPage - pageDTO.pageBlock }"><button>이전</button></a>
+</c:if>
+
+<c:forEach var="i" begin="${pageDTO.startPage }" end="${pageDTO.endPage }" step="1">
+	<a href="list.bo?pageNum=${i }"><button>${i }</button></a>
+</c:forEach>
+
+<c:if test="${pageDTO.endPage < pageDTO.pageCount }">
+	<a href="list.bo?pageNum=${pageDTO.startPage + pageDTO.pageBlock }"><button>다음</button></a>
+</c:if>
 
 </body>
 </html>

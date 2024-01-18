@@ -19,13 +19,6 @@ public class BoardDAO {
 	
 	public Connection getConnection() {
 		try {
-//			Class.forName("com.mysql.cj.jdbc.Driver");
-//
-//			String dbUrl = "jdbc:mysql://localhost:3306/jspdb?serverTimezone=Asia/Seoul";
-//			String dbUser = "root";
-//			String dbPass = "1234";
-//			con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-			
 			Context init = new InitialContext();
 			DataSource ds = (DataSource)init.lookup("java:comp/env/jdbc/MysqlDB");
 			con = ds.getConnection();
@@ -106,14 +99,16 @@ public class BoardDAO {
 		}return num;
 	}
 	
-	public ArrayList<BoardDTO> getBoardList() {
+	public ArrayList<BoardDTO> getBoardList(PageDTO pDTO) {
 		System.out.println("BoardDAO getBoardList()");
 
 		ArrayList<BoardDTO> blist = new ArrayList<BoardDTO>();
 		try {
 			con = getConnection();
-			String sql = "select* from board";
+			String sql = "select* from board order by num desc limit ?, ?";
 			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, pDTO.getStartRow() - 1);
+			pstmt.setInt(2, pDTO.getPageSize());
 			
 			rs = pstmt.executeQuery();
 			
@@ -215,6 +210,27 @@ public class BoardDAO {
 		} finally {
 			dbClose();
 		}
+	}
+
+	public int getBoardcount() {
+		int count = 0;
+		try {
+			con = getConnection();	
+
+			String sql = "select count(*) from board";
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt("count(*)");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose();
+		}return count;
 	}
 	
 	

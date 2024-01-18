@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
 import com.itwillbs.dao.BoardDAO;
+import com.itwillbs.dao.PageDTO;
 import com.itwillbs.domain.BoardDTO;
 
 public class BoardService {
@@ -41,13 +42,24 @@ public class BoardService {
 		}
 	}
 
-	public ArrayList<BoardDTO> getBoardList() {
+	public ArrayList<BoardDTO> getBoardList(PageDTO pDTO) {
 		System.out.println("BoardService getBoardList()");
 		ArrayList<BoardDTO> bList = null;
 		
 		try {
+			
+			int pageSize = pDTO.getPageSize();
+			int currentPage = pDTO.getCurrentPage();
+			
+			int startRow = (currentPage-1)*pageSize + 1;
+			
+			int endPage = startRow + pageSize - 1;
+			
+			pDTO.setEndRow(endPage);
+			pDTO.setStartRow(startRow);
+			
 			bDAO = new BoardDAO();
-			bList = bDAO.getBoardList();
+			bList = bDAO.getBoardList(pDTO);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,6 +120,18 @@ public class BoardService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public int getBoardcount() {
+		int count = 0;
+		try {
+			bDAO = new BoardDAO();
+			count = bDAO.getBoardcount();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 	

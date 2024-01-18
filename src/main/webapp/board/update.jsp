@@ -8,12 +8,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%
-// int num = Integer.parseInt(request.getParameter("num"));
-// BoardDAO bDAO = new BoardDAO();
-// BoardDTO bDTO = bDAO.getBoardContent(num);
-%>
-
 <c:set var="bDTO"  value="${requestScope.boardDTO }"/>
 	<form action="updatePro.bo" method="post">
 	<input type="hidden" name="num" value="${bDTO.num }">
